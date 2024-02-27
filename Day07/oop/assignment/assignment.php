@@ -1,5 +1,5 @@
 <?php
-
+include("FormValidator.php");
 $name = $email = $website = $gender = $comment = $password = $confirmPassword = "";
 $nameErr = $emailErr = $websiteErr = $genderErr = $commentErr = $passwordErr = $confirmPasswordErr = "";
 
@@ -15,17 +15,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nameErr = "Name is required";
     } else {
         $name = testInput($_POST['name']);
-        if (!preg_match("/^[a-zA-Z- ']*$/", $name)) {
-            $nameErr = "Only Letters and white space allowed";
-        }
+        $validatorOne = new FormValidator();
+        $validatorOne->validateName($name,$nameErr);
+     
     }
     if (empty($_POST['email'])) {
         $emailErr = "Email is required";
     } else {
         $email = testInput($_POST['email']);
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $emailErr = "Invalid email format";
-        }
+        $validatorTwo = new FormValidator();
+        $validatorTwo->validateEmail($email,$emailErr);
 
     }
     if (empty($_POST['gender'])) {
@@ -42,9 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $websiteErr = "Website is required";
     } else {
         $website = testInput($_POST["website"]);
-        if (!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $website)) {
-            $websiteErr = "Invalid URL";
-        }
+        $validatorThree = new FormValidator();
+        $validatorThree->validateWebsite($website,$websiteErr);
+        
     }
     if (empty($_POST["password"]) || (preg_match("/^.*(?=.{8,})(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*$/", $_POST["password"]) === 0)) {
         $passwordErr = "Password must be at least 8 characters and must contain at least one lower case letter, one upper case letter and one digit";
