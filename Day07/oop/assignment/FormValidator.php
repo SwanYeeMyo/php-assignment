@@ -22,8 +22,6 @@ function validateWebsite($website, &$websiteErr) {
          return true;
     
 }
-function validateGender($gender,&$genderErr){
-    
-}
+
 }
 ?>
