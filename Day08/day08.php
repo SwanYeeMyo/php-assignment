@@ -28,14 +28,14 @@ if ($conn->connect_error) {
 // }
 // $conn->close();
 // ====================
-//data binding with form php
-// $query = $conn->prepare("INSERT INTO php_projects.guests (name,email) VALUES (?,?)");
-// $query->bind_param('ss',$username,$email);
-// $username = 'DiToTheMi';
-// $email = 'DiToTheMi@gmail.com';
-// $query->execute();
-// echo "New recorad created successfully";
-// $query->close();
+// data binding with form php
+$query = $conn->prepare("INSERT INTO php_projects.guests (name,email) VALUES (?,?)");
+$query->bind_param('ss',$username,$email);
+$username = 'DiToTheMi';
+$email = 'DiToTheMi@gmail.com';
+$query->execute();
+echo "New recorad created successfully";
+$query->close();
 
 $sql = "SELECT * FROM php_projects.guests";
 $result = $conn->query($sql);
@@ -52,6 +52,7 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row['name'] . "</td>";
         echo "<td>" . $row['email'] . "</td>";
         echo "</tr>";    }
+        echo "</table>";
 } else {
     echo "0 results";
 }
