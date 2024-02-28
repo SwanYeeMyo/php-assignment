@@ -40,12 +40,12 @@ if ($conn->connect_error) {
 $sql = "SELECT * FROM php_projects.guests";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
-    echo "<table border='1'>";
-    echo "<tr>";
-    echo "<th>ID</th>";
-    echo "<th>Name</th>";
-    echo "<th>Email</th>";
-    echo "</tr>";
+    echo "<table border='1'><tr><th>ID</th><th>Name</th><th>Email</th></tr>";
+    // echo "<tr>";
+    // echo "<th>ID</th>";
+    // echo "<th>Name</th>";
+    // echo "<th>Email</th>";
+    // echo "</tr>";
     while ($row = $result->fetch_assoc()) {
         echo "<tr>";
         echo "<td>" . $row['id'] . "</td>";
