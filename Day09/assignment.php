@@ -4,23 +4,31 @@ $titleErr = $bodyErr = "";
 
 require('sql.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (empty($_POST['title'])) {
-        $titleErr = 'Title is required';
-    } else {
-        $title = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if(isset($_POST['action']) === 'DELETE') {
+       $id = $_POST['id'];
+       $sql = "DELETE FROM  php_projects.form where id = " . $id . ";";
+    
+       $conn->query($sql);
+    }else{
+        if (empty($_POST['title'])) {
+            $titleErr = 'Title is required';
+        } else {
+            $title = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
+        }
+        
+        if (empty($_POST['body'])) {
+            $bodyErr = 'Body is required';
+        } else {
+            $body = filter_var($_POST['body'], FILTER_SANITIZE_STRING);
+        }
+        if(!empty($_POST['title'] && !empty($_POST['body']) )){
+            $query = $conn->prepare("INSERT INTO php_projects.form(title,body) VALUES (?,?)");
+            $query->bind_param('ss',$title,$body,);
+            $query->execute();    
+        }
     }
     
-    if (empty($_POST['body'])) {
-        $bodyErr = 'Body is required';
-    } else {
-        $body = filter_var($_POST['body'], FILTER_SANITIZE_STRING);
-    }
-    if(!empty($_POST['title'] && !empty($_POST['body']) )){
-        $query = $conn->prepare("INSERT INTO php_projects.form(title,body) VALUES (?,?)");
-        $query->bind_param('ss',$title,$body,);
-        $query->execute();    
-    }
 }
 ?>
 
@@ -60,8 +68,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if($result->num_rows > 0){ ?>
                   <?php  while($row = $result->fetch_assoc()){ ?>
                     <div class="shadow p-5 rounded-lg my-5">
-                    <div class="text-2xl mb-3 font-mono"><?php echo  $row['title']  ?></div>
+                    <div class=" mb-3 font-mono flex justify-between items-center">
+                        <h5 class="text-2xl"><?php echo  $row['id'] ." - ". $row['title'];  ?></h5> 
+                        <h6 class="text-sm text-gray-400" ><?= $row['register_date'];   ?> </h6>   
+      </div>
                     <div class="text-md text-gray-400"><?php echo $row['body']  ?></div>
+                    <form action="<?= $_SERVER["PHP_SELF"] ?>" method="POST">
+                        <input type="hidden" name="id" value="<?= $row['id']?>">
+                        <input type="hidden" name="action" value="DELETE" >
+                        <input type="submit" value="Delete" class="bg-red-600 my-5 w-full text-white p-2 rounded-md">
+                    </form>
                     </div>
                   
                    <?php } ?>
